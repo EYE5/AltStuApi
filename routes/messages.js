@@ -4,7 +4,9 @@ var curl = require('curlrequest');
 var HTMLParser = require('node-html-parser');
 
 router.post('/unread', (req, res) => {
-    const { session } = req.body; 
+    const { session } = req.body;
+    
+    if (!session) return;
     
     const cookie = `sessionid=${session}`;
 

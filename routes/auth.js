@@ -3,7 +3,11 @@ var router = express.Router();
 var curl = require('curlrequest');
 
 router.post('/', (req, res) => {
-    const { login, password } = req.body; 
+    const { login, password } = req.body;
+    
+    
+    if (!login || !password) return;
+
     auth(login, password,res);
 })
 

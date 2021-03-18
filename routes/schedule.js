@@ -6,6 +6,8 @@ var HTMLParser = require('node-html-parser');
 router.post('/', (req, res) => {
     const { session } = req.body; 
     
+    if (!session) return;
+
     const cookie = `sessionid=${session}`;
 
     curl.request({ url: 'https://student.altstu.ru/', method: 'GET', include: true, cookie: cookie }, (err, parts) => {
