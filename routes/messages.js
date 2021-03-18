@@ -6,7 +6,7 @@ var HTMLParser = require('node-html-parser');
 router.post('/unread', (req, res) => {
     const { session } = req.body;
     
-    if (!session) return;
+    if (!session) return res.send({error:'Неверные входные параметры'})
     
     const cookie = `sessionid=${session}`;
 
