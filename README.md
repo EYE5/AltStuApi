@@ -1,0 +1,2 @@
+# AltStuApi
+Public altstu api
