@@ -6,7 +6,7 @@ var HTMLParser = require('node-html-parser');
 router.post('/', (req, res) => {
     const { session } = req.body; 
     
-    if (!session) return res.send({error:'Неверные входные параметры'})
+    if (!session) return res.status(400).send({error:'Неверные входные параметры'})
     const cookie = `sessionid=${session}`;
 
     curl.request({ url: 'https://student.altstu.ru/', method: 'GET', include: true, cookie: cookie }, (err, parts) => {

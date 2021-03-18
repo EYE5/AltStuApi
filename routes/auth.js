@@ -6,7 +6,7 @@ router.post('/', (req, res) => {
     const { login, password } = req.body;
     
     
-    if (!login || !password) return res.send({error:'Неверные входные параметры'})
+    if (!login || !password) return res.status(400).send({error:'Неверные входные параметры'})
 
     auth(login, password,res);
 })
