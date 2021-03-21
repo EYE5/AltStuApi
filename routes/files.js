@@ -11,6 +11,7 @@ router.post('/', (req, res) => {
     const cookie = `sessionid=${session}`;
 
     curl.request({ url: 'https://student.altstu.ru/files/active/', method: 'GET', include: true, cookie: cookie }, (err, parts) => {
+        if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
         
         return res.send(parseFiles(parts))
     })
