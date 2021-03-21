@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var curl = require('curlrequest');
 var HTMLParser = require('node-html-parser');
+var checkStatus = require('../utils/checkStatus');
 
 router.post('/', (req, res) => {
     const { session } = req.body; 
@@ -11,6 +12,7 @@ router.post('/', (req, res) => {
 
     curl.request({ url: 'https://student.altstu.ru/', method: 'GET', include: true, cookie: cookie }, (err, parts) => {
         if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
+        if (!checkStatus(parts)) return res.status(301).send({ error: 'Невалидная сессия', code: 301 });
         
         return res.send(parseSchedule(parts))
     })

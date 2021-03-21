@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var curl = require('curlrequest');
 var HTMLParser = require('node-html-parser');
+var checkStatus = require('../utils/checkStatus');
 
 router.post('/unread', (req, res) => {
     const { session, page } = req.body;
@@ -12,13 +13,17 @@ router.post('/unread', (req, res) => {
 
     if (!page) {
         curl.request({ url: 'https://student.altstu.ru/message/unread', method: 'GET', include: true, cookie: cookie }, (err, parts) => {
-        
+            if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
+            if (!checkStatus(parts)) return res.status(301).send({ error: 'Невалидная сессия', code: 301 });
+
             return res.send(parseMessages(parts))
         })
     }
     else {
          curl.request({ url: `https://student.altstu.ru/message/unread?p=${page}`, method: 'GET', include: true, cookie: cookie }, (err, parts) => {
-        
+            if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
+            if (!checkStatus(parts)) return res.status(301).send({ error: 'Невалидная сессия', code: 301 });
+             
             return res.send(parseMessages(parts))
         })
     }
@@ -29,20 +34,20 @@ router.post('/archive', (req, res) => {
     
     if (!session) return res.status(400).send({error:'Неверные входные параметры'})
 
-    console.log('res')
-
     const cookie = `sessionid=${session}`;
     if (!page) {
         curl.request({ url: 'https://student.altstu.ru/message/archive', method: 'GET', include: true, cookie: cookie }, (err, parts) => {
-        if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
-            
+            if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
+            if (!checkStatus(parts)) return res.status(301).send({ error: 'Невалидная сессия', code: 301 });
+
             return res.send(parseMessages(parts))
         })
     }
     else {
         curl.request({ url: `https://student.altstu.ru/message/archive/?p=${page}`, method: 'GET', include: true, cookie: cookie }, (err, parts) => {
-        if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
-                
+            if (err) return res.status(500).send({ error: 'Внутренняя ошибка сервера, хост не доступен', code: 500 });
+            if (!checkStatus(parts)) return res.status(301).send({ error: 'Невалидная сессия', code: 301 });
+            
             return res.send(parseMessages(parts))
     })
     }
